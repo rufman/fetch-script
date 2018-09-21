@@ -1,6 +1,6 @@
 {
   "name": "fetch-script",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Async loading of scripts using the Fetch API",
   "main": "lib/fetch-script.js",
   "unpkg": "dist/fetch-script.js",
@@ -19,6 +19,12 @@
   },
   "author": "Stephane Rufer <stephane.rufer@gmail.com>",
   "license": "MIT",
+  "files": [
+    "dist",
+    "lib",
+    "es",
+    "src"
+  ],
   "devDependencies": {
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
