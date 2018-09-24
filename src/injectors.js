@@ -1,1 +1,4 @@
-export const head = (function(i,n,j,e,c,t,s){t=n.createElement(j),s=n.getElementsByTagName(j)[0];t.appendChild(n.createTextNode(e.text));t.onload=c(e);s?s.parentNode.insertBefore(t,s):n.head.appendChild(t)}); // eslint-disable-line
+export const head = (function(w,d,t,o,r,c,s){c=d.createElement(t),s=d.getElementsByTagName(t)[0];c.appendChild(d.createTextNode(o.text));c.onload=r(o);s?s.parentNode.insertBefore(c,s):d.appendChild(c)}); // eslint-disable-line
+
+export const headCors = (function(w,d,t,u,r,e,c,s){c=d.createElement(t),s=d.head.getElementsByTagName(t)[0];c.src=u;c.onload=r;c.onerror=e;s?s.parentNode.insertBefore(c,s):d.head.appendChild(c) // eslint-disable-line
+});
