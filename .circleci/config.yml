@@ -51,6 +51,16 @@ jobs:
           path: reports/junit
       - store_artifacts:
           path: reports/junit
+  deploy:
+    <<: *defaults
+    steps:
+      - bootstrap
+      - run:
+          name: Authenticate with the registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
 
 workflows:
   version: 2.1
@@ -58,3 +68,19 @@ workflows:
     jobs:
       - test
       - build
+  publish:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+                ignore: /.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
