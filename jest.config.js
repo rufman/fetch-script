@@ -8,7 +8,7 @@ module.exports = {
       statements: 100,
     },
   },
-  coverageReporters: ['html'],
+  coverageReporters: ['html', 'jest-junit'],
   moduleFileExtensions: ['js'],
   roots: ['<rootDir>/test', '<rootDir>/src'],
   setupFiles: ['<rootDir>/test/test-setup.js'],

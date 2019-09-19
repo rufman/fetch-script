@@ -1,0 +1,60 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2.1
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:10.16
+
+commands:
+  bootstrap:
+    description: "Bootstrap (set registry and install deps)"
+    steps:
+      - checkout
+      - run:
+          name: Set registry URL
+          command: |
+            npm set registry https://registry.npmjs.org/
+            yarn config set registry https://registry.npmjs.org/
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Setup and install
+          command: yarn install
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - bootstrap
+      - run:
+          name: Build
+          command: yarn run build
+  test:
+    <<: *defaults
+    steps:
+      - bootstrap
+      - run:
+          name: Run tests in CI mode
+          command: yarn run test:ci
+      - run:
+          name: Run lint in CI mode
+          command: yarn run lint:ci
+      - store_test_results:
+          path: reports/junit
+      - store_artifacts:
+          path: reports/junit
+
+workflows:
+  version: 2.1
+  test_and_build:
+    jobs:
+      - test
+      - build
