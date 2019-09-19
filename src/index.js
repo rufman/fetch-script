@@ -12,13 +12,21 @@ function contentLoadedEvent() {
  */
 function fetchInject(scripts, promise) {
   if (!scripts) {
-    return Promise.reject(new ReferenceError("Failed to execute 'fetchInject': 1 argument required but only 0 present."));
+    return Promise.reject(
+      new ReferenceError(
+        "Failed to execute 'fetchInject': 1 argument required but only 0 present.",
+      ),
+    );
   }
   if (scripts && !Array.isArray(scripts)) {
-    return Promise.reject(new TypeError("Failed to execute 'fetchInject': argument 1 must be of type 'Array'."));
+    return Promise.reject(
+      new TypeError("Failed to execute 'fetchInject': argument 1 must be of type 'Array'."),
+    );
   }
   if (promise && promise.constructor !== Promise) {
-    return Promise.reject(new TypeError("Failed to execute 'fetchInject': argument 2 must be of type 'Promise'."));
+    return Promise.reject(
+      new TypeError("Failed to execute 'fetchInject': argument 2 must be of type 'Promise'."),
+    );
   }
 
   const resources = [];
@@ -33,25 +41,38 @@ function fetchInject(scripts, promise) {
     }
     if (options && options.mode === 'no-cors' && options.method === 'GET') {
       // can not use fetch, inject the script into the head
-      deferreds.push(new Promise((resolve, reject) => {
-        headCors(window, document, 'script', url, () => {
-          contentLoadedEvent();
-          resolve();
-        }, () => {
-          reject(new Error(networkError));
-        });
-      }));
+      deferreds.push(
+        new Promise((resolve, reject) => {
+          headCors(
+            window,
+            document,
+            'script',
+            url,
+            () => {
+              contentLoadedEvent();
+              resolve();
+            },
+            () => {
+              reject(new Error(networkError));
+            },
+          );
+        }),
+      );
     } else {
       deferreds.push(
-        window.fetch(url, options)
+        window
+          .fetch(url, options)
           .then((res) => {
             if (!res.ok) {
               throw Error(networkError);
             }
             return [res.clone().text(), res.blob()];
           })
-          .then((promises) => Promise.all(promises)
-            .then((resolved) => resources.push({ text: resolved[0], blob: resolved[1] }))),
+          .then((promises) =>
+            Promise.all(promises).then((resolved) =>
+              resources.push({ text: resolved[0], blob: resolved[1] }),
+            ),
+          ),
       );
     }
   });

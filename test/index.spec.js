@@ -26,12 +26,13 @@ describe('fetchInject', () => {
       injectedScriptElement.dispatchEvent(loadEvent);
     }, 10);
 
-    fetchInject([{
-      url: `//${scriptName}`,
-      options: { method: 'GET', mode: 'no-cors' },
-    }]).then(() => {
-      expect(document.getElementsByTagName('script')[0].src)
-        .toEqual(`http://${scriptName}/`);
+    fetchInject([
+      {
+        url: `//${scriptName}`,
+        options: { method: 'GET', mode: 'no-cors' },
+      },
+    ]).then(() => {
+      expect(document.getElementsByTagName('script')[0].src).toEqual(`http://${scriptName}/`);
       expect(contentloadedListener).toHaveBeenCalledWith(DOMContentLoadedEvent);
       done();
     });
@@ -48,12 +49,13 @@ describe('fetchInject', () => {
       injectedScriptElement.dispatchEvent(loadErrorEvent);
     }, 10);
 
-    fetchInject([{
-      url: `//${scriptName}`,
-      options: { method: 'GET', mode: 'no-cors' },
-    }]).catch((err) => {
-      expect(document.getElementsByTagName('script')[0].src)
-        .toEqual(`http://${scriptName}/`);
+    fetchInject([
+      {
+        url: `//${scriptName}`,
+        options: { method: 'GET', mode: 'no-cors' },
+      },
+    ]).catch((err) => {
+      expect(document.getElementsByTagName('script')[0].src).toEqual(`http://${scriptName}/`);
       expect(contentloadedListener).not.toHaveBeenCalled();
       expect(err.message).toEqual(networkError);
       done();
@@ -63,10 +65,12 @@ describe('fetchInject', () => {
   test('should fetch a script in cors mode', async (done) => {
     fetch.mockResponseOnce(scriptText);
 
-    fetchInject([{
-      url: `//${scriptName}`,
-      options: { method: 'GET', mode: 'cors' },
-    }]).then((res) => {
+    fetchInject([
+      {
+        url: `//${scriptName}`,
+        options: { method: 'GET', mode: 'cors' },
+      },
+    ]).then((res) => {
       expect(res[0].text).toEqual(scriptText);
       expect(fetch.mock.calls.length).toEqual(1);
       done();
@@ -76,9 +80,11 @@ describe('fetchInject', () => {
   test('should fetch without any options', async (done) => {
     fetch.mockResponseOnce(scriptText);
 
-    fetchInject([{
-      url: `//${scriptName}`,
-    }]).then((res) => {
+    fetchInject([
+      {
+        url: `//${scriptName}`,
+      },
+    ]).then((res) => {
       expect(res[0].text).toEqual(scriptText);
       expect(fetch.mock.calls.length).toEqual(1);
       done();
@@ -115,10 +121,12 @@ describe('fetchInject', () => {
   test('should fetch css in cors mode', async (done) => {
     fetch.mockResponseOnce(new Blob([cssText], { type: 'text/css' }));
 
-    fetchInject([{
-      url: `//${cssName}`,
-      options: { method: 'GET', mode: 'cors' },
-    }]).then((res) => {
+    fetchInject([
+      {
+        url: `//${cssName}`,
+        options: { method: 'GET', mode: 'cors' },
+      },
+    ]).then((res) => {
       expect(res[0].text).toEqual(cssText);
       expect(fetch.mock.calls.length).toEqual(1);
       done();
@@ -126,22 +134,23 @@ describe('fetchInject', () => {
   });
 
   test('should return an error for a failed fetch in cors mode', async (done) => {
-    fetch.mockResponses([
-      scriptText,
-      { status: 500 },
-    ]);
+    fetch.mockResponses([scriptText, { status: 500 }]);
 
-    fetchInject([{
-      url: `//${scriptName}`,
-      options: { method: 'GET', mode: 'cors' },
-    }]).catch((err) => {
+    fetchInject([
+      {
+        url: `//${scriptName}`,
+        options: { method: 'GET', mode: 'cors' },
+      },
+    ]).catch((err) => {
       expect(err.message).toEqual(networkError);
       done();
     });
   });
 
   test('should reject promise, if no scripts are defined', () => {
-    expect(fetchInject()).rejects.toThrow("Failed to execute 'fetchInject': 1 argument required but only 0 present.");
+    expect(fetchInject()).rejects.toThrow(
+      "Failed to execute 'fetchInject': 1 argument required but only 0 present.",
+    );
   });
 
   test('should reject promise, if scripts is not an array', () => {

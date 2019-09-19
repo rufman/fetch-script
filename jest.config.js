@@ -8,15 +8,8 @@ module.exports = {
       statements: 100,
     },
   },
-  coverageReporters: [
-    'html',
-  ],
+  coverageReporters: ['html'],
   moduleFileExtensions: ['js'],
-  roots: [
-    '<rootDir>/test',
-    '<rootDir>/src',
-  ],
-  setupFiles: [
-    '<rootDir>/test/test-setup.js',
-  ],
+  roots: ['<rootDir>/test', '<rootDir>/src'],
+  setupFiles: ['<rootDir>/test/test-setup.js'],
 };

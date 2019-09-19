@@ -1,7 +1,7 @@
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
-import { uglify } from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
 
 const env = process.env.NODE_ENV;
 
@@ -16,10 +16,7 @@ if (env === 'es' || env === 'cjs') {
     format: env,
     indent: false,
   };
-  config.plugins.push(
-    babel(),
-    commonjs(),
-  );
+  config.plugins.push(babel(), commonjs());
 }
 
 if (env === 'development' || env === 'production') {
@@ -41,14 +38,7 @@ if (env === 'development' || env === 'production') {
 }
 
 if (env === 'production') {
-  config.plugins.push(uglify({
-    compress: {
-      pure_getters: true,
-      unsafe: true,
-      unsafe_comps: true,
-      warnings: false,
-    },
-  }));
+  config.plugins.push(terser());
 }
 
 export default config;
