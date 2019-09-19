@@ -1,11 +1,11 @@
 {
   "name": "fetch-script",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Async loading of scripts using the Fetch API",
   "main": "lib/fetch-script.js",
   "unpkg": "dist/fetch-script.js",
   "module": "es/fetch-script.js",
-  "typings": "fetch-script.d.ts",
+  "typings": "typings/fetch-script.d.ts",
   "scripts": {
     "build:commonjs": "cross-env NODE_ENV=cjs rollup -c -o lib/fetch-script.js",
     "build:es": "cross-env BABEL_ENV=es NODE_ENV=es rollup -c -o es/fetch-script.js",
@@ -28,7 +28,8 @@
     "dist",
     "lib",
     "es",
-    "src"
+    "src",
+    "typings"
   ],
   "devDependencies": {
     "@babel/core": "^7.6.0",
