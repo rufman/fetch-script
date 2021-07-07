@@ -34,10 +34,11 @@ function fetchInject(scripts, promise) {
   const thenables = [];
 
   scripts.forEach((input) => {
+    let nonce;
     let options;
     let url = input;
     if (typeof input === 'object') {
-      ({ options, url } = input);
+      ({ nonce, options, url } = input);
     }
     if (options && options.mode === 'no-cors' && options.method === 'GET') {
       // can not use fetch, inject the script into the head
@@ -55,6 +56,9 @@ function fetchInject(scripts, promise) {
             () => {
               reject(new Error(networkError));
             },
+            null,
+            null,
+            nonce,
           );
         }),
       );
@@ -70,7 +74,7 @@ function fetchInject(scripts, promise) {
           })
           .then((promises) =>
             Promise.all(promises).then((resolved) =>
-              resources.push({ text: resolved[0], blob: resolved[1] }),
+              resources.push({ text: resolved[0], blob: resolved[1], nonce }),
             ),
           ),
       );
