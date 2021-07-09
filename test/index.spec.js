@@ -7,6 +7,8 @@ describe('fetchInject', () => {
   const cssName = 'test.css';
   const scriptText = 'function theBestTeam() { console.log("Dodgers."); }';
   const cssText = '.baseball{ color: blue; }';
+  const nonceNoCors = '8IBTHwOdqNKAWeKl7plt8g==';
+  const nonceCors = 'r@nd0m';
   const networkError = 'Network response was not ok.';
 
   beforeEach(() => {
@@ -32,7 +34,10 @@ describe('fetchInject', () => {
         options: { method: 'GET', mode: 'no-cors' },
       },
     ]).then(() => {
-      expect(document.getElementsByTagName('script')[0].src).toEqual(`http://${scriptName}/`);
+      const scriptElem = document.getElementsByTagName('script')[0];
+      expect(scriptElem.src).toEqual(`http://${scriptName}/`);
+      // Ensure that no nonce has been added if no nonce has been passed as a parameter
+      expect(scriptElem.nonce).toEqual('');
       expect(contentloadedListener).toHaveBeenCalledWith(DOMContentLoadedEvent);
       done();
     });
@@ -62,6 +67,33 @@ describe('fetchInject', () => {
     });
   });
 
+  test('should fetch a script in non cors mode and add a nonce', async (done) => {
+    const DOMContentLoadedEvent = document.createEvent('Event');
+    DOMContentLoadedEvent.initEvent('DOMContentLoaded', true, true);
+    const loadEvent = document.createEvent('Event');
+    loadEvent.initEvent('load', true, true);
+    const contentloadedListener = jest.fn();
+    document.addEventListener('DOMContentLoaded', contentloadedListener);
+
+    setTimeout(() => {
+      const injectedScriptElement = document.getElementsByTagName('script')[0];
+      injectedScriptElement.dispatchEvent(loadEvent);
+    }, 10);
+
+    fetchInject([
+      {
+        url: `//${scriptName}`,
+        options: { method: 'GET', mode: 'no-cors' },
+        nonce: nonceNoCors,
+      },
+    ]).then(() => {
+      const scriptElem = document.getElementsByTagName('script')[0];
+      expect(scriptElem.src).toEqual(`http://${scriptName}/`);
+      expect(scriptElem.nonce).toEqual(nonceNoCors);
+      done();
+    });
+  });
+
   test('should fetch a script in cors mode', async (done) => {
     fetch.mockResponseOnce(scriptText);
 
@@ -73,6 +105,25 @@ describe('fetchInject', () => {
     ]).then((res) => {
       expect(res[0].text).toEqual(scriptText);
       expect(fetch.mock.calls.length).toEqual(1);
+      // Ensure that no nonce has been added if no nonce has been passed as a parameter
+      expect(document.getElementsByTagName('script')[0].nonce).toEqual('');
+      done();
+    });
+  });
+
+  test('should fetch a script in cors mode and add a nonce', async (done) => {
+    fetch.mockResponseOnce(scriptText);
+
+    fetchInject([
+      {
+        url: `//${scriptName}`,
+        options: { method: 'GET', mode: 'cors' },
+        nonce: nonceCors,
+      },
+    ]).then((res) => {
+      expect(res[0].text).toEqual(scriptText);
+      expect(fetch.mock.calls.length).toEqual(1);
+      expect(document.getElementsByTagName('script')[0].nonce).toEqual(nonceCors);
       done();
     });
   });
