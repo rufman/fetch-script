@@ -1,6 +1,6 @@
 {
   "name": "fetch-script",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Async loading of scripts using the Fetch API",
   "main": "lib/fetch-script.js",
   "unpkg": "dist/fetch-script.js",
