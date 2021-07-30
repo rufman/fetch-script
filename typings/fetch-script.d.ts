@@ -1,7 +1,8 @@
 declare module 'fetch-script' {
   interface Script {
-    url: string;
+    nonce: string;
     options: RequestInit;
+    url: string;
   }
 
   function fetchScript(scripts: Script[], promise?: Promise<void>): Promise<void>;
