@@ -1,6 +1,6 @@
 declare module 'fetch-script' {
   interface Script {
-    nonce: string;
+    nonce?: string;
     options: RequestInit;
     url: string;
   }
